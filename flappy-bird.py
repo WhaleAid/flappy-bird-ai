@@ -10,7 +10,7 @@ WIN_WIDTH = 600
 WIN_HEIGHT = 800
 FLOOR = 730
 STAT_FONT = pygame.font.SysFont('FranchiseRegular', 50)
-DRAW_LINES = True
+DRAW_LINES = False
 
 WIN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.display.set_caption("Flappy Bird")
@@ -207,9 +207,8 @@ def main(genomes, config):
     
     base = Base(FLOOR)
     pipes = [Pipe(700)]
-    score = 0
-    
     clock = pygame.time.Clock()
+    score = 0
 
     run = True
     while run and len(birds) > 0:
@@ -233,7 +232,7 @@ def main(genomes, config):
 
             output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))
 
-            if output[0] > 0.5: 
+            if output[0] > 0.5:
                 bird.jump()
 
         base.move()
@@ -273,9 +272,9 @@ def main(genomes, config):
 
         draw_window(WIN, birds, pipes, base, score, gen, pipe_ind)
 
-def run(config_file):
+def run(config_path):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                                neat.DefaultSpeciesSet, neat.DefaultStagnation, config_file)
+                                neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
     
     p = neat.Population(config)
     
@@ -286,7 +285,7 @@ def run(config_file):
     winner = p.run(main, 50)
     print('\nBest genome:\n{!s}'.format(winner))
     
-if __name__ == '__main__':
+if __name__ == "__main__":
     local_dir = os.path.dirname(__file__)
-    config_path = os.path.join(local_dir, 'config-feedforward.txt')
+    config_path = os.path.join(local_dir, "config-feedforward.txt")
     run(config_path)
